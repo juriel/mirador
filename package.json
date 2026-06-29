@@ -1,0 +1,27 @@
+{
+  "name": "mirador",
+  "version": "1.0.0",
+  "description": "Web browsing automation server powered by Playwright",
+  "main": "dist/server.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "tsx watch src/server.ts"
+  },
+  "dependencies": {
+    "fastify": "^4.28.0",
+    "@fastify/cors": "^9.0.1",
+    "playwright": "^1.44.0",
+    "turndown": "^7.2.0",
+    "turndown-plugin-gfm": "^1.0.2",
+    "zod": "^3.23.8",
+    "pino": "^9.1.0",
+    "pino-pretty": "^11.1.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.5",
+    "@types/node": "^20.12.12",
+    "@types/turndown": "^5.0.4",
+    "tsx": "^4.11.0"
+  }
+}

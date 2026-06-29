@@ -1,0 +1,21 @@
+version: '3.9'
+services:
+  mirador:
+    build: .
+    ports:
+      - "9191:9191"
+    volumes:
+      - ./tokens.json:/app/tokens.json:ro
+    environment:
+      - PORT=9191
+      - MAX_BROWSER_INSTANCES=10
+      - SESSION_DEFAULT_TIMEOUT_MINUTES=10
+      - LOG_LEVEL=info
+      - NODE_ENV=production
+      - CORS_ORIGIN=*
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9191/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
