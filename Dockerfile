@@ -2,11 +2,15 @@ FROM mcr.microsoft.com/playwright:v1.44.0-jammy
 
 WORKDIR /app
 
-COPY package*.json ./
-RUN npm ci --only=production
+COPY package*.json tsconfig.json ./
+RUN npm ci
 
-COPY dist/ ./dist/
+COPY src/ ./src/
+RUN npx tsc
+
 COPY tokens.json ./
+
+RUN npm prune --omit=dev
 
 EXPOSE 9191
 

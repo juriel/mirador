@@ -24,7 +24,7 @@ npm start
 ### Docker (recommended for production)
 
 ```bash
-docker-compose up --build
+docker compose up --build
 ```
 
 The server starts on `http://localhost:9191`.
