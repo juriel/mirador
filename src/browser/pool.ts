@@ -82,7 +82,12 @@ export class BrowserPool {
   private async launch(): Promise<Browser> {
     return chromium.launch({
       headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage'],
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-blink-features=AutomationControlled',
+      ],
     });
   }
 }

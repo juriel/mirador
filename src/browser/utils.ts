@@ -1,7 +1,37 @@
-import { Page, errors } from 'playwright';
+import { Page, BrowserContext, errors } from 'playwright';
 import TurndownService from 'turndown';
 import { gfm } from 'turndown-plugin-gfm';
-import { AppError, NavigateBody } from '../types';
+import { AppError } from '../types';
+
+export const DEFAULT_USER_AGENT =
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36';
+
+export const DEFAULT_VIEWPORT = { width: 1920, height: 1080 };
+
+export async function stealthContext(
+  browser: any,
+  options?: {
+    viewport?: { width: number; height: number };
+    userAgent?: string;
+    locale?: string;
+    extraHTTPHeaders?: Record<string, string>;
+  },
+): Promise<{ context: BrowserContext; page: Page }> {
+  const context = await browser.newContext({
+    viewport: options?.viewport || DEFAULT_VIEWPORT,
+    userAgent: options?.userAgent || DEFAULT_USER_AGENT,
+    locale: options?.locale || 'en-US',
+    extraHTTPHeaders: {
+      'Accept-Language': 'en-US,en;q=0.9,es;q=0.8',
+      ...(options?.extraHTTPHeaders || {}),
+    },
+  });
+  const page = await context.newPage();
+  await page.addInitScript(() => {
+    Object.defineProperty(navigator, 'webdriver', { get: () => undefined });
+  });
+  return { context, page };
+}
 
 const turndown = new TurndownService({
   headingStyle: 'atx',

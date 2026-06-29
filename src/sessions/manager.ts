@@ -1,7 +1,8 @@
 import crypto from 'node:crypto';
-import { Browser, BrowserContext, Page } from 'playwright';
-import { AppError, SessionRecord, Viewport } from '../types';
+import type { Browser, BrowserContext, Page } from 'playwright';
+import type { SessionRecord, Viewport } from '../types';
 import { BrowserPool } from '../browser/pool';
+import { stealthContext } from '../browser/utils';
 
 export interface CreateSessionOptions {
   timeoutMinutes?: number;
@@ -26,13 +27,7 @@ export class SessionManager {
     const browser = await this.pool.acquire();
 
     try {
-      const context = await browser.newContext({
-        viewport: options.viewport,
-        userAgent: options.userAgent,
-        extraHTTPHeaders: options.extraHTTPHeaders,
-        locale: options.locale,
-      });
-      const page = await context.newPage();
+      const { context, page } = await stealthContext(browser, options);
 
       const sessionId = crypto.randomUUID().slice(0, 12).replace(/-/g, '');
       const now = new Date();

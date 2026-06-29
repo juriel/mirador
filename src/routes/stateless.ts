@@ -9,6 +9,7 @@ import {
   estimateTokens,
   extractMetadata,
   getLocator,
+  stealthContext,
 } from '../browser/utils';
 
 const waitUntilSchema = z.enum(['load', 'domcontentloaded', 'networkidle', 'commit']).optional().default('networkidle');
@@ -42,24 +43,13 @@ async function withPage<T>(
   fn: (page: any, url?: string) => Promise<T>,
 ): Promise<T> {
   const browser = await pool.acquire();
-  let context: any = null;
-  let page: any = null;
+  let ctx: { context: any; page: any } | null = null;
   try {
-    if (options.viewport || options.userAgent) {
-      context = await browser.newContext({
-        viewport: options.viewport || undefined,
-        userAgent: options.userAgent || undefined,
-      });
-      page = await context.newPage();
-    } else {
-      page = await browser.newPage();
-    }
-    return await fn(page, options.userAgent);
+    ctx = await stealthContext(browser, options);
+    return await fn(ctx.page);
   } finally {
-    if (page && context) {
-      await context.close().catch(() => {});
-    } else if (page) {
-      await page.close().catch(() => {});
+    if (ctx) {
+      await ctx.context.close().catch(() => {});
     }
     pool.release(browser);
   }
