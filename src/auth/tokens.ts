@@ -16,7 +16,10 @@ export class TokenManager {
       }
       const data: TokenFile = JSON.parse(readFileSync(filePath, 'utf-8'));
       for (const token of data.tokens) {
-        this.tokens.set(token.secret, token);
+        const key = token.secret.startsWith('Bearer ')
+          ? token.secret.slice(7)
+          : token.secret;
+        this.tokens.set(key, token);
       }
       console.info(`Loaded ${data.tokens.length} tokens`);
     } catch (err) {
