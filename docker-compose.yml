@@ -4,7 +4,8 @@ services:
     ports:
       - "9191:9191"
     volumes:
-      - ./tokens.json:/app/tokens.json:ro
+      - ./tokens.json:/app/tokens.json
+      - ./.env:/app/.env
     environment:
       - PORT=9191
       - MAX_BROWSER_INSTANCES=10

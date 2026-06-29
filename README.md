@@ -6,28 +6,36 @@ A production-ready web browsing automation server powered by **Playwright** and 
 
 ## Quick start
 
-### Local development
+Requirements: **Docker** only. No Node.js or npm needed on the host.
 
 ```bash
-# Install dependencies (includes Playwright's Chromium)
-npm install
-npx playwright install chromium
+# 1. Clone the repository
+git clone https://github.com/juriel/mirador.git
+cd mirador
 
-# Start in dev mode with hot reload
-npm run dev
+# 2. Copy and configure environment variables
+cp .env.example .env
+# edit .env with your real values
 
-# Build and run
-npm run build
-npm start
-```
+# 3. Provide authentication tokens
+# copy or create tokens.json in the project root
 
-### Docker (recommended for production)
-
-```bash
+# 4. Start the service
 docker compose up --build
+
+# Or run in background
+docker compose up --build -d
 ```
 
 The server starts on `http://localhost:9191`.
+
+### Local development (requires Node.js)
+
+```bash
+npm install
+npx playwright install chromium
+npm run dev
+```
 
 ---
 
